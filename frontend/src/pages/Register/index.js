@@ -1,13 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './styles.css';
 
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi'
 
 import logoImg from '../../assets/logo.svg';
+import api from '../../service/api';
 
 export default function Register() {
+  const history = useHistory();
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [whatsapp, setWhatsApp] = useState('');
+  const [city, setCity] = useState('');
+  const [uf, setUf] = useState('');
+
+  async function handleRegister(event){
+    event.preventDefault();
+
+    const data = {
+      name,
+      email,
+      whatsapp,
+      city,
+      uf,
+    }
+
+    const response = await api.post('ongs', data);
+    alert(`Seu id de acesso: ${response.data.id}`);
+    history.push('/');
+  }
+
   return (
     <div className="register-container">
       <div className="content">
@@ -23,14 +48,39 @@ export default function Register() {
           </Link>
         </section>
 
-        <form>
-          <input placeholder="Nome da ONG" />
-          <input type="email" placeholder="E-mail" />
-          <input placeholder="WhatsApp" />
+        <form onSubmit={handleRegister}>
+          <input
+            placeholder="Nome da ONG"
+            value={name}
+            onChange={event => setName(event.target.value)}
+          />
+
+          <input
+            type="email"
+            placeholder="E-mail"
+            value={email}
+            onChange={event => setEmail(event.target.value)}
+          />
+
+          <input
+            placeholder="WhatsApp"
+            value={whatsapp}
+            onChange={event => setWhatsApp(event.target.value)}
+          />
 
           <div className="input-group">
-            <input placeholder="Cidade" />
-            <input placeholder="UF" style={{ width: 80 }} />
+            <input
+              placeholder="Cidade"
+              value={city}
+              onChange={event => setCity(event.target.value)}
+            />
+
+            <input
+              placeholder="UF"
+              style={{ width: 80 }}
+              value={uf}
+              onChange={event => setUf(event.target.value)}
+            />
           </div>
 
           <button className="button">Cadastrar</button>
